@@ -1,0 +1,560 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+:root {
+  --dark-blue: #003249;
+  --white-blue: #0c5272;
+  --white: #fff;
+  --gray: #8390a2;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Your existing .sidebar styles - UNCHANGED */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 250px;
+  height: 100%;
+  padding-left: 20px;
+  background: var(--dark-blue);
+  transition: all 0.5s ease;
+  z-index: 99;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background-color: #888; border-radius: 4px; }
+.sidebar .logo_details { position: relative; height: 60px; display: flex; align-items: center; }
+.sidebar li { position: relative; margin: 8px 0; list-style: none; }
+.sidebar i { position: relative; height: 60px; min-width: 50px; font-size: 28px; line-height: 60px; text-align: center; color: var(--white); }
+.sidebar .logo_details .logo_name { font-size: 20px; font-weight: 600; color: var(--white); transition: all 0.5s ease; }
+.sidebar ul li a i { position: relative; height: 50px; font-size: 18px; line-height: 50px; }
+.sidebar ul li a { width: 100%; height: 100%; display: flex; align-items: center; text-decoration: none; border-radius: 30px 0px 0px 30px; transition: all 0.5s ease; }
+.sidebar ul li a .links_name { font-size: 15px; font-weight: 400; color: var(--white); transition: 0.4s; }
+.sidebar li.login { position: fixed; width: 250px; height: 60px; left: 0; bottom: -8px; padding: 20px 20px; background: var(--white-blue); transition: all 0.5s ease; }
+.sidebar .login #log_out { position: absolute; height: 60px; right: 0; top: 50%; transform: translateY(-50%); line-height: 60px; transition: all 0.5s ease; }
+.sidebar li a.active { background: var(--white); }
+.sidebar li a:hover { background: var(--white); }
+.sidebar li a.active .links_name, .sidebar li a.active i { color: var(--dark-blue); }
+.sidebar li a:hover .links_name, .sidebar li a:hover i { color: var(--dark-blue); }
+.sidebar li.login a:hover { background: none; }
+.sidebar li.login a:hover .links_name, .sidebar li.login a:hover i { color: var(--white); }
+.sidebar.open, .sidebar.open li.login { width: 88px; }
+.sidebar.open .logo_name, .sidebar.open .links_name { opacity: 0; }
+.sidebar.open ~ .home_section { width: calc(100% - 88px); left: 88px; }
+.sidebar-line { width: 90%; height: 1px; background-color: #ffffff33; margin: 15px auto; }
+
+/* Your existing .home_section and .topbar styles - UNCHANGED */
+.home_section {
+  position: relative;
+  width: calc(100% - 250px);
+  min-height: 100vh;
+  left: 250px;
+  top: 0;
+  background: #E4E9E7;
+  transition: all 0.5s ease;
+  display: flex;
+  flex-direction: column;
+}
+.home_section::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 90;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0s 0.5s ease;
+  pointer-events: none;
+}
+.home_section .topbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 68px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: #003249;
+  overflow: visible;
+  z-index: 90;
+  transition: margin-left 0.5s ease;
+}
+.home_section .topbar .toggle { position: relative; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; font-size: 2em; cursor: pointer; color:white; margin-left: 0; transition: margin-left 0.5s ease; }
+.home_section .user_wrapper img { width: 40px; height: 40px; margin-right: 0.5rem; border-radius: 50%; }
+.user_wrapper { position: relative; display: flex; align-items: center; }
+.user-menu { position: relative; cursor: pointer; user-select: none; }
+.user-name { font-weight: 600; color: #fff; border-radius: 5px; }
+.dropdown-menu { position: absolute; top: 45px; right: 0; background: white; border: 1px solid #ccc; border-radius: 8px; width: 150px; display: none; box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 100; }
+.dropdown-menu a { display: block; padding: 10px; color: #333; text-decoration: none; transition: background 0.2s; }
+.dropdown-menu a:hover { background: #f0f0f0; }
+#profile-icon { color: #ffffff; }
+
+/* --- MAIN CONTENT AREA & PROFILE SECTIONS --- */
+.main-profile-area {
+  padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* Space between patient and client sections */
+}
+
+.profile-section { /* Common container for patient and client sections */
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+
+.profile-section-header {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.profile-section-header h2 {
+  font-size: 1.7rem;
+  color: var(--dark-blue);
+  margin: 0;
+  flex-grow: 1;
+}
+
+.header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+}
+.register-patient-btn, .register-client-btn {
+  white-space: nowrap;
+  padding: 10px 16px;
+  background-color: var(--white-blue);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.register-patient-btn:hover, .register-client-btn:hover {
+  background-color: var(--dark-blue);
+}
+.appointment-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+.search-wrapper {
+  min-width: 250px;
+  max-width: 1020px;
+  height: 40px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  flex-grow: 2;
+}
+.search-wrapper label { display: flex; align-items: center; width: 100%; }
+.search-wrapper input { width: 100%; flex: 1; height: 100%; border: none; outline: none; font-size: 0.95rem; padding: 0 8px; background: transparent; }
+.search-wrapper span { display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #555; cursor: pointer; }
+
+.right-bttn {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+
+/* --- MODIFIED/ADDED TABLE STYLES --- */
+.table-container {
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.profile-data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.profile-data-table th,
+.profile-data-table td {
+  padding: 10px 12px;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  border-bottom: 1px solid #eee;
+}
+
+.profile-data-table th {
+  position: sticky;
+  top: 0;
+  background-color: var(--dark-blue);
+  color: white;
+  padding: 15px 12px;
+  font-weight: 600;
+  font-size: 12px;
+  text-align: center;
+  z-index: 2;
+  text-transform: uppercase;
+}
+
+.profile-data-table td {
+  font-size: 12px;
+  color: #333333;
+}
+
+.profile-data-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.profile-data-table tbody tr:hover {
+  background-color: #eef7ff;
+}
+
+.action-icons { text-align: center; white-space: nowrap; }
+.action-icons button { background-color: transparent; border: none; padding: 6px; margin: 0 2px; cursor: pointer; border-radius: 50%; transition: background-color 0.2s ease-in-out, transform 0.15s ease; display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
+.action-icons button:hover { transform: translateY(-1px); }
+.action-icons button:active { transform: translateY(0px); }
+.action-icons button i { font-size: 1.1rem; display: block; }
+.action-icons .edit-btn i { color: #28a745; }
+.action-icons .edit-btn:hover { background-color: rgba(40, 167, 69, 0.1); }
+.action-icons .edit-btn:hover i { color: #218838; }
+.action-icons .delete-btn i { color: #dc3545; }
+.action-icons .delete-btn:hover { background-color: rgba(220, 53, 69, 0.1); }
+.action-icons .delete-btn:hover i { color: #c82333; }
+
+.view-pets-btn {
+  background-color: var(--white-blue);
+  color: var(--white);
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+.view-pets-btn:hover { background-color: var(--dark-blue); }
+
+/* Styles for the 'View Notes' button in the table and history modal */
+.view-notes-btn {
+  background-color: #0c5272;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.view-notes-btn:hover {
+  background-color: var(--dark-blue);
+}
+
+
+/* --- MODAL STYLES (Modified for Centering) --- */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  z-index: 9999;
+   /* Add flexbox properties for centering when visible */
+   justify-content: center;
+   align-items: center;
+  padding: 10px;
+}
+
+/* Class added by JS when modal is visible */
+.modal.modal-visible {
+    display: flex; /* Use flexbox to center content */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px; /* Maximum width for the modal content */
+  max-height: 90vh; /* Maximum height to allow scrolling */
+  margin: auto; /* Auto margins help in centering, especially horizontally with defined width */
+  position: relative;
+  overflow-y: auto; /* Add scrollbar if content overflows vertically */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  /* Ensure modal-content is within the flex container */
+  flex-shrink: 0; /* Prevent content from shrinking below its size */
+  flex-grow: 0; /* Prevent content from growing */
+}
+
+.close-btn { position: absolute; top: 15px; right: 15px; font-size: 24px; color: #555; cursor: pointer; background: none; border: none; line-height: 1; z-index: 10; } /* Added z-index */
+.close-btn:hover { color: black; }
+.modal .modal-section-title { font-size: 1.3rem; font-weight: 600; color: var(--dark-blue); margin-bottom: 20px; text-align: center; }
+.modal-profile-form { display: grid; grid-template-columns: 1fr; gap: 15px; }
+.modal-profile-form .form-group { margin-bottom: 0; flex: 1; display: flex; flex-direction: column; }
+.modal-profile-form label { display: block; font-size: 0.9rem; margin-bottom: 6px; font-weight: 500; color: #333; }
+.modal-profile-form input[type="text"], .modal-profile-form input[type="date"], .modal-profile-form input[type="tel"], .modal-profile-form input[type="email"], .modal-profile-form textarea, .modal-profile-form select { width: 100%; padding: 10px; font-size: 0.9rem; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; transition: border-color 0.3s ease, box-shadow 0.3s ease; outline: none; }
+.modal-profile-form input:focus, .modal-profile-form select:focus, .modal-profile-form textarea:focus { border-color: var(--white-blue); background-color: var(--white); box-shadow: 0 0 0 3px rgba(12, 82, 114, 0.15); }
+.modal-profile-form textarea { min-height: 80px; resize: vertical; }
+.modal-profile-form .required-asterisk { color: red; }
+.modal-profile-form .form-group.full-width { grid-column: 1 / -1; }
+.modal-profile-form .submit-btn, .modal-profile-form .submit_change { background-color: var(--dark-blue); color: white; padding: 12px 20px; margin-top: 10px; border: none; cursor: pointer; width: 100%; border-radius: 5px; font-weight: 500; transition: background-color 0.3s ease; grid-column: 1 / -1; font-size: 16px; }
+.modal-profile-form .submit-btn:hover, .modal-profile-form .submit_change:hover { background-color: var(--white-blue); }
+
+/* Specific styles for the View Owner Pets modal */
+#clientPetsModal .modal-content, #ownerPetsModal .modal-content {
+    max-width: 500px;
+}
+.client-pets-list-container, .owner-pets-list-container {
+    margin-top: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+#clientPetsList, #ownerPetsList {
+    list-style: none;
+    padding-left: 0;
+}
+#clientPetsList li, #ownerPetsList li {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+}
+#clientPetsList li:last-child, #ownerPetsList li:last-child {
+    border-bottom: none;
+}
+#clientPetsList li strong, #ownerPetsList li strong {
+    color: var(--dark-blue);
+}
+
+/* Styles for the Medical Notes Modal Content */
+#medicalNotesContent {
+    white-space: pre-wrap;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.5;
+}
+/* Optional: Adjust modal content width for the medical notes modal */
+#medicalNotesModal .modal-content {
+    max-width: 600px;
+}
+
+/* --- Styles for Pet History Modal --- */
+#petHistoryModal .modal-content {
+    max-width: 700px; /* Adjust width as needed for history table */
+}
+
+#petHistoryDetails {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee; /* Separator */
+}
+
+#petHistoryDetails p {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+#petHistoryDetails strong {
+    color: var(--dark-blue);
+    display: inline-block; /* Ensures strong takes up space */
+    min-width: 130px; /* Slightly increased min-width for contact */
+}
+
+.modal-subsection-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--white-blue);
+    margin-top: 20px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--white-blue);
+    padding-bottom: 5px;
+}
+
+#petTransactionsHistory {
+    max-height: 300px; /* Limit height for history table */
+    overflow-y: auto; /* Add scroll if history is long */
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.history-table th,
+.history-table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    text-align: left; /* Align text left for readability */
+    font-size: 0.9rem;
+}
+
+.history-table th {
+    background-color: #f0f0f0; /* Light background for header */
+    font-weight: 600;
+    color: #555;
+    position: sticky; /* Keep header visible when scrolling */
+    top: 0;
+    z-index: 1;
+}
+
+.history-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.history-table tbody tr:hover {
+    background-color: #eef7ff;
+}
+
+.history-table td.no-history-message {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+}
+
+/* --- FOOTER --- */
+.footer { text-align: center; font-size: 14px; color: #777; background-color: #f0f0f0; padding: 15px 0; border-top: 1px solid #ccc; transition: margin-left 0.5s ease; margin-top: auto; z-index: 2; }
+.sidebar:not(.open) ~ .home_section + .footer { margin-left: 250px; }
+.sidebar.open ~ .home_section + .footer { margin-left: 88px; }
+.footer .fusion { font-weight: bold; color: #003249; }
+
+/* ----- Your Existing RESPONSIVE rules ----- */
+@media screen and (max-width: 768px) {
+  .sidebar { left: -250px; width: 250px; }
+  .sidebar.open { left: 0; width: 250px; }
+  .sidebar.open ul .links_name { display: inline-block; }
+  .sidebar.open ul li a .links_name { display: inline-block; opacity: 1; }
+  .home_section { width: 100%; left: 0; }
+  .sidebar.open ~ .home_section { height: 100vh; overflow-y: hidden; }
+  .sidebar.open ~ .home_section .topbar .toggle { margin-left: 130px; }
+  .sidebar.open .logo_name { visibility: visible; opacity: 1; }
+  .sidebar:not(.open) .logo_name { opacity: 0; }
+  .footer { margin-left: 0 !important; font-size: 12px; padding: 10px; }
+  .sidebar.open ~ .home_section::before { opacity: 1; visibility: visible; left: 0; width: 100%; transition: opacity 0.5s ease, visibility 0s 0s ease; pointer-events: auto; }
+
+  .prof_panel .header {
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 10px;
+  }
+  .prof_panel .header h2 {
+    text-align: left;
+    width: 100%;
+  }
+  .appointment-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 10px;
+  }
+  .appointment-actions .search-wrapper {
+    order: 1;
+    width: 100%;
+    max-width: 100%;
+  }
+  .appointment-actions .right-bttn {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    order: 2;
+  }
+  .register-patient-btn, .register-client-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .client-profile-section .profile-section-header { flex-direction: column; align-items: stretch; }
+  .client-profile-section .profile-section-header h2 { width: 100%; text-align: left; margin-bottom: 15px; }
+  .client-profile-section .header-actions { flex-direction: column; align-items: stretch; width: 100%; gap: 10px; }
+  .client-profile-section .search-wrapper { order: 1; width: 100%; max-width: 100%;}
+  .client-profile-section .register-btn { order: 2; width: 100%; justify-content: center; }
+
+
+  .table-container {
+      max-height: 400px;
+      overflow-y: auto;
+      overflow-x: auto;
+    }
+  .profile-data-table { font-size: 14px; white-space: nowrap; }
+  .profile-data-table th, .profile-data-table td { padding: 8px 10px; font-size: 13px; }
+  .action-icons button { padding: 6px; margin: 0 3px; }
+  .action-icons button i { font-size: 1.1rem; }
+  .view-pets-btn { padding: 5px 10px; font-size: 0.75rem; }
+  .view-notes-btn { padding: 5px 10px; font-size: 0.75rem; }
+  .modal-content { width: 90%; max-width: 90%; }
+  .modal-profile-form { grid-template-columns: 1fr; }
+
+  /* Responsive adjustments for history modal */
+  #petHistoryModal .modal-content {
+      max-width: 95%;
+  }
+  .history-table th, .history-table td {
+      padding: 8px;
+      font-size: 0.85rem;
+  }
+  #petHistoryDetails strong {
+      min-width: 90px; /* Adjust label width */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .home_section .topbar .toggle { font-size: 1.8em; width: 50px; height: 50px; }
+  .prof_panel .header h2, .client-profile-section .profile-section-header h2 { font-size: 1.4rem; }
+  .search-wrapper { height: 38px; }
+  .search-wrapper input { font-size: 0.9rem; }
+  .register-patient-btn, .register-client-btn { padding: 8px 12px; font-size: 0.85rem; }
+  .profile-data-table th, .profile-data-table td { padding: 6px 8px; font-size: 12px; }
+  .action-icons button { padding: 5px; margin: 0 2px; }
+  .action-icons button i { font-size: 1rem; }
+  .view-pets-btn { padding: 4px 6px; font-size: 0.7rem; }
+  .view-notes-btn { padding: 4px 6px; font-size: 0.7rem; }
+  .modal-content { width: 95%; padding: 15px; }
+  .modal .modal-section-title { font-size: 1.1rem; }
+
+  /* More aggressive adjustments for history modal on very small screens */
+  #petHistoryDetails strong {
+      min-width: 70px;
+  }
+  .history-table th, .history-table td {
+      padding: 6px;
+      font-size: 0.8rem;
+  }
+}
